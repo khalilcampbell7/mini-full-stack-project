@@ -6,35 +6,29 @@ import useFirstRender from './Hooks/useFirstRender'
 function App() {
   
   let [wishList, setWishList] = useState([]);
-  let [itemToAdd, setItemToAdd] = useState({});
+  let [itemToAdd, setItemToAdd] = useState(' ');
 
   const firstRender = useFirstRender();
   
   const handleClick = () => {
-
+    setItemToAdd(document.querySelector('#name').value)
   }
   
   useEffect(() => {
-
-    console.log('Get Data use effect has gone off.')
-
     async function fetchData(){
       const url = 'http://localhost:3001/wishlist'
       await fetch(url)
       .then((response) => response.json())
-     
       .then((response) => setWishList(response.map((item) => {
         return (<li>{ item.name }</li>)
       })))
     }
       fetchData(); 
-  }, [])
+  }, [itemToAdd])
   
   useEffect(() => {
-
-        console.log('Post Data use effect has gone off.')
-
-      let dataToSend = {}
+      let dataToSend = {name : itemToAdd}
+      
       async function fetchData(){ 
         
         if(!firstRender) {
@@ -61,7 +55,7 @@ function App() {
         </header>
         <form>
           <input type="text" id="name" name="WishList Item"></input>
-          <button type="submit" onClick={handleClick}>Add Item</button>
+          <button type="button" onClick={handleClick}>Add Item</button>
         </form>
         <ol>
           { wishList }
